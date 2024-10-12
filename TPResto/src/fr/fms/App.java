@@ -1,5 +1,6 @@
 package fr.fms;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class App {
 						System.out.print(product.getIdProduct() + " - " + product.getName() + " : " + product.getPrice()
 								+ " £ - ");
 					}
-					
+					System.out.println();
 					inputChoice = sc.nextInt();
 					
                     if (inputChoice < 1 || inputChoice > products.size()) {
@@ -48,7 +49,7 @@ public class App {
                         continue;
                     }
 					
-					Product product = listProducts.get(listCategories.get(i)).get(1);
+					Product product = listProducts.get(listCategories.get(i)).get(inputChoice-1);
 					iJob.addProductToCommand("commande : " + command, product);
 					System.out.println(product.getName() + " choisi");
 
@@ -73,6 +74,12 @@ public class App {
 					System.out.println("Merci d'avoir passé commande");
 					
 				}
+		}
+		
+		try {
+			iJob.writeIntoFile();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		sc.close();
 	}

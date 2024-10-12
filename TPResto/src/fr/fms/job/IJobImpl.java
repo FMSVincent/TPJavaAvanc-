@@ -1,5 +1,8 @@
 package fr.fms.job;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,5 +67,39 @@ public class IJobImpl implements IJob {
 			System.out.println("* Total de la commande : " + totalPrice + " * \n");
 			System.out.println("-------------------------------------- \n");
 		});
+	}
+	
+	/**
+	 * methode qui permet d'enregistrer la commande dans un fichier
+	 * @throws IOException 
+	 */
+	
+	public void writeIntoFile() throws IOException {
+		try (BufferedWriter file = new BufferedWriter(new FileWriter("orders.txt"))) {
+			command.entrySet().stream().forEach(entry -> {
+				double totalPrice = 0;
+				try {
+					file.write("******" + entry.getKey() + "****** \n");
+					entry.getValue().forEach(product -> {
+						try {
+							file.write(product.getName());
+							file.newLine();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					});
+					for (Product product : entry.getValue()) {
+						totalPrice += product.getPrice();
+					}
+					file.write("* Total de la commande : " + totalPrice + " * \n");
+					file.write("-------------------------------------- \n");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		} catch (IOException e) {
+			throw new IOException(e.getMessage());
+		}
 	}
 }
